@@ -1,16 +1,18 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreateTodo } from '~/hooks/todo';
 import { todoSchema, TodoSchemaType } from '~/schemas/todo';
+import Spinner from '../ui/spinner';
 
 export function TodoCreate() {
   const form = useForm<TodoSchemaType>({
     resolver: zodResolver(todoSchema),
   });
 
-  const { create } = useCreateTodo();
+  const { create, isSuccess, isLoading } = useCreateTodo();
 
   const onSubmit = (data: TodoSchemaType) => {
     /**
@@ -20,24 +22,46 @@ export function TodoCreate() {
     create(data);
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+    } else {
+      console.log('Failed to create todo');
+    }
+  }, [isSuccess]);
+
   return (
     <div className="max-w-[500px] w-full p-2 border border-gray-100">
+      <Spinner isLoading={isSuccess ? false : isLoading} />
       <div className="flex flex-col gap-y-2">
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <label htmlFor="title">Title</label>
-          <input
-            id="title"
-            className="border px-2 rounded-sm border-gray-300 w-full h-8"
-            {...form.register('title')}
-          />
+          {/* Form Title */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="title">Title</label>
+            <input
+              id="title"
+              className="border px-2 rounded-sm border-gray-300 w-full h-8"
+              {...form.register('title')}
+            />
+            <span className="text-red-500 text-xs">
+              {form.formState.errors.title?.message}
+            </span>
+          </div>
 
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
-            className="border px-2 py-1 rounded-sm border-gray-300 w-full"
-            {...form.register('description')}
-          />
+          {/* Form Description */}
+          <div className="flex flex-col gap-2 pt-2">
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              className="border px-2 py-1 rounded-sm border-gray-300 w-full"
+              {...form.register('description')}
+            />
+            <span className="text-red-500 text-xs">
+              {form.formState.errors.description?.message}
+            </span>
+          </div>
 
+          {/* Submit Button */}
           <div className="flex justify-end">
             <button
               type="submit"

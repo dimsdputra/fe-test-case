@@ -6,6 +6,7 @@ import {
 } from 'react';
 import { useGetTodos, useMoveTodo, useRemoveTodo } from '~/hooks/todo';
 import { TodoCard } from './card';
+import Spinner from '../ui/spinner';
 
 export interface TodoListProps {}
 
@@ -13,8 +14,8 @@ export function TodoList(_: TodoListProps) {
   const { todos } = useGetTodos();
   const deferredTodos = useDeferredValue(todos);
 
-  const { move } = useMoveTodo();
-  const { remove } = useRemoveTodo();
+  const { move, isLoading: isMoving, isSuccess: isMoveSuccess } = useMoveTodo();
+  const { remove, isLoading: isRemoving, isSuccess: isRemoveSuccess } = useRemoveTodo();
 
   return (
     <div className="max-w-[500px] w-full p-2 space-y-2 border border-gray-100">
@@ -34,6 +35,7 @@ export function TodoList(_: TodoListProps) {
               onTodoMove={move}
               onTodoRemove={remove}
             />
+            <Spinner isLoading={isRemoveSuccess ? false : isRemoving} />
           </ViewTransition>
         ))
       )}

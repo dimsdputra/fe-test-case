@@ -1,7 +1,7 @@
-import { TodoAction, TodoType } from '~/types/todo';
+import { MoveTodoType, TodoAction, TodoType } from '~/types/todo';
 
 export interface TodoCardProps extends TodoType {
-  onTodoMove?: (action: TodoAction) => void;
+  onTodoMove?: (action: MoveTodoType) => void;
   onTodoRemove?: (id: number) => void;
 }
 
@@ -14,10 +14,10 @@ export function TodoCard(props: TodoCardProps) {
         <p className="flex-1">{title}</p>
 
         <div className="grid grid-cols-3 gap-x-2 *:w-8 *:aspect-square *:bg-gray-100 *:hover:bg-gray-200 *:rounded-sm *:cursor-pointer *:transition-colors *:duration-200">
-          <button onClick={onTodoMove?.bind(null, TodoAction.MOVE_UP)}>
+          <button onClick={onTodoMove?.bind(null, {id, action: TodoAction.MOVE_UP})}>
             👆
           </button>
-          <button onClick={onTodoMove?.bind(null, TodoAction.MOVE_DOWN)}>
+          <button onClick={onTodoMove?.bind(null, {id, action: TodoAction.MOVE_DOWN})}>
             👇
           </button>
           <button onClick={onTodoRemove?.bind(null, id)}>❌</button>

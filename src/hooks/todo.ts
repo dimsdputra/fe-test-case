@@ -16,32 +16,36 @@ export function useGetTodos() {
 export function useMoveTodo() {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isSuccess, isIdle } = useMutation({
     mutationFn: moveTodo,
     onSuccess: () => queryClient.invalidateQueries(),
   });
 
   return {
     move: mutate,
+    isSuccess,
+    isLoading: !isIdle,
   };
 }
 export function useCreateTodo() {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isSuccess, isIdle } = useMutation({
     mutationFn: createTodo,
     onSuccess: () => queryClient.invalidateQueries(),
   });
 
   return {
     create: mutate,
+    isSuccess,
+    isLoading: !isIdle,
   };
 }
 
 export function useRemoveTodo() {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isSuccess, isIdle } = useMutation({
     mutationKey: ['removeTodo'],
     mutationFn: removeTodo,
     onSuccess: () => queryClient.invalidateQueries(),
@@ -49,5 +53,7 @@ export function useRemoveTodo() {
 
   return {
     remove: mutate,
+    isSuccess,
+    isLoading: !isIdle,
   };
 }
